@@ -114,20 +114,34 @@ def hit_or_stand(deck, hand):
 
 
 def show_some(player, dealer):
+    print("\n"* 10)
     #keep 1 dealer card hidden and show all player cards
     print("Dealer's Hand:")
-    print(" <HIDDEN CARD>\n"
-          " {}\n".format(dealer.cards[1]))
-    print("Player's Hand:", *player.cards, sep='\n ')
-    print("Hand's strength : {}\n".format(player.value))
+    if values[dealer.cards[1].rank] < 10:
+        print("   ----------    ----------\n "
+              " |          |  |{}         |\n"
+              "  |          |  |          |\n"
+              "  |  hidden  |  |    {}     |\n"
+              "  |          |  |          |\n"
+              "  |          |  |        {} |\n"
+              "   ----------    ----------\n".format(signs[dealer.cards[1].suit], values[dealer.cards[1].rank], signs[dealer.cards[1].suit]))
+    else:
+        print("   ----------    ----------\n "
+              " |          |  |{}         |\n"
+              "  |          |  |          |\n"
+              "  |  hidden  |  |    {}    |\n"
+              "  |          |  |          |\n"
+              "  |          |  |        {} |\n"
+              "   ----------    ----------\n".format(signs[dealer.cards[1].suit], values[dealer.cards[1].rank],
+                                                     signs[dealer.cards[1].suit]))
+    #print("Player's Hand:", *player.cards, sep='\n ')
+    print_hand(player)
 
 
 def show_all(player, dealer):
     #display all cards - at end of game
-    print("Dealer's Hand:", *player.cards, sep='\n ')
-    print("Dealr's strength : {}\n".format(dealer.value))
-    print("Player's Hand:", *player.cards, sep='\n ')
-    print("Player's strength : {}\n".format(player.value))
+    print_hand(dealer)
+    print_hand(player)
 
 
 def player_busts(player, chip):
@@ -154,6 +168,49 @@ def dealer_wins(player, chip):
 def push(player):
     print("Push!\n"
           "Dealer and Player tie with {}".format(player.value))
+
+
+def print_hand(player):
+    i = 0
+    while i < len(player.cards):
+        print("   ----------", end=" ", sep="    ")
+        i += 1
+    print("\n", end="")
+    i = 0
+    while i < len(player.cards):
+        print("  |{}         |".format(signs[player.cards[i].suit]), end="", sep="  ")
+        i += 1
+    print("\n", end="")
+    i = 0
+    while i < len(player.cards):
+        print("  |          |", end="", sep="  ")
+        i += 1
+    print("\n", end="")
+    i = 0
+    while i < len(player.cards):
+        if values[player.cards[i].rank] >= 10:
+            print("  |    {}    |".format(values[player.cards[i].rank]), end="", sep="  ")
+        else:
+            print("  |    {}     |".format(values[player.cards[i].rank]), end="", sep=" ")
+        i += 1
+
+    print("\n", end="")
+    i = 0
+    while i < len(player.cards):
+        print("  |          |", end="", sep="  ")
+        i += 1
+    print("\n", end="")
+    i = 0
+    while i < len(player.cards):
+        print("  |         {}|".format(signs[player.cards[i].suit]), end="", sep="  ")
+        i += 1
+    print("\n", end="")
+    i = 0
+    while i < len(player.cards):
+        print("   ----------", end=" ", sep="  ")
+        i += 1
+    print("\n", end="")
+    print("Hand's strength : {}\n".format(player.value))
 
 
 def main():
@@ -194,6 +251,7 @@ def main():
 
             #if dealer is above 17 check conditions
         if gameDealer.value> 17 and gamePlayer.value < 21:
+            show_all(gamePlayer, gameDealer)
             if gameDealer.value > gamePlayer.value:
                 dealer_wins(gamePlayer, chips)
             if gameDealer.value < gamePlayer.value:
@@ -211,11 +269,10 @@ def main():
                 elif gameDealer.value > gamePlayer.value:
                     dealer_wins(gamePlayer, chips)
                     break
-                elif gameDealer.value < gamePlayer.value:
+                elif gameDealer.value < gamePlayer.value and gameDealer.value >= 17:
                     player_wins(gamePlayer, chips)
                     break
-                else:
-                    push(gamePlayer)
+                elif gameDealer.value >=17 and gamePlayer.value == gameDealer.value:
                     break
 
         print("You currently have {} chips.".format(chips.total))
