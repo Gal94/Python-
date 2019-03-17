@@ -1,5 +1,6 @@
+#update 4 - added support to JQKA card display instead of their value
+
 import random
-#add support to JQKA
 suits = ('Hearts', 'Diamonds', 'Spades', 'Clubs')
 ranks = ('Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King', 'Ace')
 values = {'Two': 2, 'Three': 3, 'Four': 4, 'Five': 5, 'Six': 6, 'Seven': 7, 'Eight': 8, 'Nine': 9, 'Ten': 10,
@@ -118,7 +119,18 @@ def show_some(player, dealer):
     print("\n"* 10)
     #keep 1 dealer card hidden and show all player cards
     print("Dealer's Hand:")
-    if values[dealer.cards[1].rank] < 10:
+    if dealer.cards[1].rank == 'Ace' or dealer.cards[1].rank == 'Jack' or\
+            dealer.cards[1].rank == 'Queen' or dealer.cards[1].rank == 'King':
+        print("   ----------    ----------\n "
+              " |          |  |{}         |\n"
+              "  |          |  |          |\n"
+              "  |  hidden  |  |    {}     |\n"
+              "  |          |  |          |\n"
+              "  |          |  |        {} |\n"
+              "   ----------    ----------\n".format(signs[dealer.cards[1].suit], dealer.cards[1].rank[0],
+                                                     signs[dealer.cards[1].suit]))
+
+    elif values[dealer.cards[1].rank] < 10:
         print("   ----------    ----------\n "
               " |          |  |{}         |\n"
               "  |          |  |          |\n"
@@ -189,7 +201,9 @@ def print_hand(player):
     print("\n", end="")
     i = 0
     while i < len(player.cards):
-        if values[player.cards[i].rank] >= 10:
+        if player.cards[i].rank == 'Ace' or player.cards[i].rank == 'Jack' or player.cards[i].rank == 'Queen' or player.cards[i].rank == 'King':
+            print("  |    {}     |".format(player.cards[i].rank[0]), end="", sep=" ")
+        elif values[player.cards[i].rank] >= 10:
             print("  |    {}    |".format(values[player.cards[i].rank]), end="", sep="  ")
         else:
             print("  |    {}     |".format(values[player.cards[i].rank]), end="", sep=" ")
@@ -236,6 +250,11 @@ def main():
         show_some(gamePlayer, gameDealer)
 
         while gameRound:  # game goes on until player stand
+
+            if gamePlayer.value == 21:
+                player_wins(gamePlayer, chips)
+                gameRound = False
+                break
 
             hit_or_stand(gameDeck, gamePlayer)
             print("\n" * 25)
