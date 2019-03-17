@@ -1,4 +1,4 @@
-#update 4 - added support to JQKA card display instead of their value
+#update 5 - added some console printings
 
 import random
 suits = ('Hearts', 'Diamonds', 'Spades', 'Clubs')
@@ -41,10 +41,11 @@ class Deck:
 
 
 class Hand:
-    def __init__(self):
+    def __init__(self,name):
         self.cards = []
         self.value = 0
         self.aces = 0
+        self.name = name
 
     def add_card(self, card):
         self.cards.append(card)
@@ -148,12 +149,15 @@ def show_some(player, dealer):
               "   ----------    ----------\n".format(signs[dealer.cards[1].suit], values[dealer.cards[1].rank],
                                                      signs[dealer.cards[1].suit]))
     #print("Player's Hand:", *player.cards, sep='\n ')
+    print("Player's hand:")
     print_hand(player)
 
 
 def show_all(player, dealer):
     #display all cards - at end of game
+    print("Dealer's hand:")
     print_hand(dealer)
+    print("Player's hand:")
     print_hand(player)
 
 
@@ -225,7 +229,7 @@ def print_hand(player):
         print("   ----------", end=" ", sep="  ")
         i += 1
     print("\n", end="")
-    print("Hand's strength : {}\n".format(player.value))
+    print("{} strength : {}\n".format(player.name,player.value))
 
 
 def main():
@@ -239,8 +243,8 @@ def main():
         take_bet(chips)
         gameDeck = Deck()
         gameDeck.shuffle()
-        gamePlayer = Hand()
-        gameDealer = Hand()
+        gamePlayer = Hand('Player')
+        gameDealer = Hand('Dealer')
         i = 0
         while i < 2:
             hit(gameDeck, gamePlayer)
