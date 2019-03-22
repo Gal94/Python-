@@ -5,6 +5,12 @@ To be added as a user command for a discord bot.
 All the data that has been scraped here is for learning purposes only, this script is by no means affiliated
 with Jagex ltd or Runescape.
 
+**To do:
+
+    Add code to log if operation was successful, amount of memory consumed and total time it took to
+    execute the script.
+
+
 
 Ver 0.0
 '''
@@ -48,6 +54,9 @@ with open('Penguins_locations.csv', 'w') as csv_file:
             info.append(data_list[i-1][1])
 
         if i % 6 == 0:
+            if info[i-1] != 'None':
+                info[i-1] = info[i-1][10:len(info[i-1]) - 7:]
+
             try:
                 epoch = int(info[i-3])
                 if (int((t.time() - epoch)/60)) > 1:
